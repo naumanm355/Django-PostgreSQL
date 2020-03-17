@@ -10,7 +10,16 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
         integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous" />
 
-    <title>Hello, world!</title>
+    <title> {% block title %}  {% endblock %}</title>
+    <style>
+    
+    a:hover{
+        text-decoration: none;
+        
+    }
+    
+
+    </style>
 </head>
 
 <body>
@@ -30,15 +39,89 @@
 
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
         integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
         crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
         integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
-        crossorigin="anonymous"></script>
+        crossorigin="anonymous"></script> -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
         integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
         crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+    <!-- {% block javascript %}
+        
+        {% endblock %} -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.js"></script>
+    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.css" />  -->
+    <script>
+        var modalDiv = $("#editModal-div");
+        var mydata;
+        $(".open_editModalbtn").on("click", function () {
+           
+            $.ajax({
+                url: $(this).attr("data-url"),
+                type: 'GET',
+                success: function (data) {
+                
+                    var dt = data.split(":")
+                    var targetDiv = $("#editForm").children("div");
+                    targetDiv.children("#edit_apiname").val(dt[1]);
+                    targetDiv.children("#edit_dispname").val(dt[2]);
+                    targetDiv.children("#edit_content").val(dt[3]);
+                    var newUrl = "/updatepost/" + dt[0] + "/";
+                    $("#editForm").attr("action", newUrl)
+                },
+                failure: function (data) {
+                    alert('Got an error dude');
+                }
+
+            });
+            $(this).attr("data-target", "#editModal");
+        });
+    </script>
+     <script>
+       
+       $(".blog_editModalbtn").on("click", function () {
+            $.ajax({
+                url: $(this).attr("data-url"),
+                type: 'GET',
+                success: function (data) {
+                    var dt = data.split(":")
+                 
+                    var targetDiv = $("#editblog_form").children("div");
+                    targetDiv.children("#apiname").val(dt[1]);
+                    targetDiv.children("#dispname").val(dt[2]);
+                    targetDiv.children("#author").val(dt[3]);
+                    var newUrl = "/updateblog/" + dt[0] + "/";
+                    $("#editblog_form").attr("action", newUrl)
+                },
+                failure: function (data) {
+                    alert('Got an error dude');
+                }
+
+            });
+            $(this).attr("data-target", "#editblogModal");
+        });
+    </script>
+    <script type="text/javascript">
+        $(".openDeleteModal_post").click(function () {
+            url = $(this).attr("deletepostId");
+            $("#deleteform_post").attr("action", url);
+        });
+    </script>
+    <script type="text/javascript">
+        $(".openDeleteModal_blog").click(function () {
+            url = $(this).attr("deleteblogId");
+          
+            $("#deleteform_blog").attr("action", url);
+        });
+//   $(".editOpen").click(function(){
+//       $(this).attr("data-target","#addModal")
+//   })
+    </script>
 </body>
+
 
 </html>

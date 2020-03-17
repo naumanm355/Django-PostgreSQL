@@ -1,10 +1,18 @@
 {% extends 'base.html' %}
+{% block title %}
+posts
+{% endblock %}
+
+
 {% block content %}
 
 <div class="row" style="padding-top: 40px;">
-    <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+    <form class="col-lg-4 col-md-4 col-sm-4 col-xs-4" action="{% url 'post' %}">
+        <input name="search" class="form-control" type="search" placeholder="Search in entire Table (from DB)">
+    </form>
+    <!-- <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
         <input class="form-control" type="search" placeholder="Search in entire Table (from DB)">
-    </div>
+    </div> -->
     <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8" style="text-align: end;align-self: flex-end;">
         <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#addModal"
             data-whatever="@getbootstrap">Add Post</button>
@@ -33,9 +41,13 @@
                 <td>{{post.display_name}}</td>
                 <td>{{post.content}}</td>
                 <td style="text-align: center;">
-                    <a class="col-lg-6 col-md-6 col-sm-12" href="#">Edit</a>
-                    <a class="col-lg-6 col-md-6 col-sm-12" href="" data-toggle="modal"
-                        data-target="#removeModal">Delete</a>
+
+                    <!-- href="editPost"  -->
+                    <!-- href="#open_editModalbtn" href="{% url 'get_editpost' post.uid %}" -->
+                    <a class="col-lg-6 col-md-6 col-sm-12 open_editModalbtn" data-toggle="modal"
+                        data-url="{% url 'get_editpost' post.uid %}" data-target="#" href="">Edit</a>
+                    <a class="col-lg-6 col-md-6 col-sm-12 openDeleteModal_post" href="" data-toggle="modal"
+                        data-target="#removeModal" deletepostId="{% url 'delete_post' post.uid %}">Delete</a>
                 </td>
             </tr>
             {% endfor %}
@@ -43,7 +55,11 @@
     </table>
 </div>
 
+
+
 <!-- Modal For Add Blog -->
+
+
 <div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
     aria-hidden="true">
     <div class="modal-dialog" role="document">
@@ -87,6 +103,49 @@
     </div>
 </div>
 
+<div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Edit Post</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form action="editAction" method="POST" id="editForm" autocomplete="off">
+
+                    {% csrf_token %}
+
+                    <div class="form-group">
+                        <label for="recipient-name" class="col-form-label">apiname:</label>
+                        <input type="text" class="form-control" id="edit_apiname" placeholder="New Apiname"
+                            name="apiname" value="57">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="recipient-name" class="col-form-label">display_name:</label>
+                        <input type="text" class="form-control" id="edit_dispname" placeholder="New Blog"
+                            name="dispname" value="45">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="message-text" class="col-form-label">content:</label>
+                        <input type="text" class="form-control" id="edit_content" placeholder="New Author"
+                            name="content" value="87">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Save Blog</button>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>
+
 <!-- Modal for remove blog -->
 <div class="modal fade" id="removeModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
     aria-hidden="true">
@@ -97,7 +156,12 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-danger">Yes, delete it.</button>
+
+                <form action="delete_action" id="deleteform_post" method="post">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger">Yes, delete it.</button>
+                </form>
+
             </div>
         </div>
     </div>
