@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.http import HttpRequest, HttpResponse, JsonResponse
 # ,HttpResponse
+from django.db.models import Q
 from . models import Blog, Post
 from .forms import searchBlog
 
@@ -11,7 +12,8 @@ def blog(request):
     ctx = {}
     searchParameter = request.GET.get("search")
     if searchParameter:
-        blogList = Blog.objects.filter(apiname__icontains=searchParameter)
+        blogList = Blog.objects.filter(
+            Q(apiname__icontains=searchParameter) | Q(author__icontains=searchParameter) | Q(uid__icontains=searchParameter) | Q(display_name__icontains=searchParameter))
     else:
         blogList = Blog.objects.all()
     ctx["blogList"] = blogList
@@ -40,7 +42,8 @@ def post(request):
     ctx = {}
     searchParameter = request.GET.get('search')
     if searchParameter:
-        postList = Post.objects.filter(apiname__icontains=searchParameter)
+        postList = Post.objects.filter(
+            Q(apiname__icontains=searchParameter) | Q(uid__icontains=searchParameter) | Q(display_name__icontains=searchParameter) | Q(content__icontains=searchParameter))
     else:
         postList = Post.objects.all()
     ctx["postList"] = postList
