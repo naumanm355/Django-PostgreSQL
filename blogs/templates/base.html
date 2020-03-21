@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-
+//Comment
 <head>
     <!-- Required meta tags -->
     <meta charset="utf-8" />
@@ -10,15 +10,12 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
         integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous" />
 
-    <title> {% block title %}  {% endblock %}</title>
+    <title> {% block title %} {% endblock %}</title>
     <style>
-    
-    a:hover{
-        text-decoration: none;
-        
-    }
-    
+        a:hover {
+            text-decoration: none;
 
+        }
     </style>
 </head>
 
@@ -59,12 +56,12 @@
         var modalDiv = $("#editModal-div");
         var mydata;
         $(".open_editModalbtn").on("click", function () {
-           
+
             $.ajax({
                 url: $(this).attr("data-url"),
                 type: 'GET',
                 success: function (data) {
-                
+
                     var dt = data.split(":")
                     var targetDiv = $("#editForm").children("div");
                     targetDiv.children("#edit_apiname").val(dt[1]);
@@ -81,15 +78,15 @@
             $(this).attr("data-target", "#editModal");
         });
     </script>
-     <script>
-       
-       $(".blog_editModalbtn").on("click", function () {
+    <script>
+
+        $(".blog_editModalbtn").on("click", function () {
             $.ajax({
                 url: $(this).attr("data-url"),
                 type: 'GET',
                 success: function (data) {
                     var dt = data.split(":")
-                 
+
                     var targetDiv = $("#editblog_form").children("div");
                     targetDiv.children("#apiname").val(dt[1]);
                     targetDiv.children("#dispname").val(dt[2]);
@@ -114,12 +111,68 @@
     <script type="text/javascript">
         $(".openDeleteModal_blog").click(function () {
             url = $(this).attr("deleteblogId");
-          
+
             $("#deleteform_blog").attr("action", url);
         });
 //   $(".editOpen").click(function(){
 //       $(this).attr("data-target","#addModal")
 //   })
+    </script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#blog_checkUncheck_all").click(function () {
+                var self = $(this);
+                if (self.is(':checked')) {
+
+                    $("input[type=checkbox]").prop('checked', true)
+                    $("#multideleteform").attr("action", "/multidelete_blog/checkedAll/")
+                }
+                else {
+                    $("input[type=checkbox]").prop('checked', false)
+                }
+            })
+        })
+        $(document).change(function () {
+            var favorite = []
+
+            if (!$("#blog_checkUncheck_all").is(':checked')) {
+                $.each($("input[type='checkbox']:checked"),
+                    function () {
+                        favorite.push($(this).val());
+                        $("#multideleteform").attr("action", "/multidelete_blog/" + favorite + "/")
+
+                    })
+            }
+        })
+    </script>
+
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            $("#post_checkUncheck_all").click(function () {
+                var self = $(this);
+                if (self.is(':checked')) {
+                    $("input[type=checkbox]").prop('checked', true)
+                    $("#multideletepost_form").attr("action", "/multidelete_post/checkedAll/")
+                }
+                else {
+                    $("input[type=checkbox]").prop('checked', false)
+                }
+            })
+        })
+        $(document).change(function () {
+            var favorite = []
+            if (!$("#post_checkUncheck_all").is(':checked')) {
+                $.each($("input[type='checkbox']:checked"),
+                    function () {
+                        favorite.push($(this).val());
+
+                        $("#multideletepost_form").attr("action", "/multidelete_post/" + favorite + "/")
+
+                    })
+            }
+        })
     </script>
 </body>
 

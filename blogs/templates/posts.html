@@ -13,18 +13,26 @@ posts
     <!-- <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
         <input class="form-control" type="search" placeholder="Search in entire Table (from DB)">
     </div> -->
-    <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8" style="text-align: end;align-self: flex-end;">
+    <div class="col-lg-4 col-md-8 col-sm-8 col-xs-8" style="text-align: end;align-self: flex-end;">
         <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#addModal"
             data-whatever="@getbootstrap">Add Post</button>
-        <button type="button" class="btn btn-primary btn-sm">Select Columns</button>
-        <button type="button" class="btn btn-danger btn-sm">Delete Selected</button>
+        <button type="button" style="margin-left: 25px;" class="btn btn-primary btn-sm">Select Columns</button>
+        <!-- <button type="button" class="btn btn-danger btn-sm">Delete Selected</button> -->
+    </div>
+    <div class="col-lg-4 col-md-8 col-sm-8 col-xs-8" style="margin-top:10px">
+        <form action="multiDelete_action" id="multideletepost_form" method="post">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger btn-sm">Delete Selected</button>
+        </form>
     </div>
 </div>
 <div style="padding-top: 40px;">
     <table class="table table-striped table-bordered">
         <thead style="color: white; background-color: #4472C4;">
             <tr>
-                <th scope="col">#</th>
+                <th scope="col">
+                    <input type="checkbox" id="post_checkUncheck_all" /> Select All
+                </th>
                 <th scope="col">UID</th>
                 <th scope="col">apiname</th>
                 <th scope="col">display_name</th>
@@ -35,7 +43,7 @@ posts
         <tbody>
             {% for post in postList %}
             <tr>
-                <td>{{ forloop.counter}}</td>
+                <td><input type="checkbox" value="{{post.uid}}" /></td>
                 <td>{{post.uid}}</td>
                 <td>{{post.apiname}}</td>
                 <td>{{post.display_name}}</td>

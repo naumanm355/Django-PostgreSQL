@@ -4,6 +4,7 @@ from django.http import HttpRequest, HttpResponse, JsonResponse
 from django.db.models import Q
 from . models import Blog, Post
 from .forms import searchBlog
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 # create blog view and show all data of blog here
 
@@ -16,6 +17,14 @@ def blog(request):
             Q(apiname__icontains=searchParameter) | Q(author__icontains=searchParameter) | Q(uid__icontains=searchParameter) | Q(display_name__icontains=searchParameter))
     else:
         blogList = Blog.objects.all()
+        page = request.GET.get('page', 1)
+        paginator = Paginator(blogList, 10)
+        try:
+            blogList = paginator.page(page)
+        except PageNotAnInteger:
+            blogList = paginator.page(1)
+        except EmptyPage:
+            blogList = paginator.page(paginator.num_pages)
     ctx["blogList"] = blogList
     return render(request, "blogs.html", context=ctx)
     # context = {
@@ -118,3 +127,23 @@ def deleteblog(request, blogId):
     deleteBlog = Blog.objects.get(pk=blogId)
     deleteBlog.delete()
     return redirect('blog')
+
+
+def multi_deleteblog(request, selectedblogs):
+    if selectedblogs == 'checkedAll':
+        Blog.objects.all().delete()
+    else:
+        selected = [int(x) for x in selectedblogs.split(',')]
+        for blogId in selected:
+            Blog.objects.get(pk=blogId).delete()
+    return redirect('blog')
+
+
+def multi_deletepost(request, selectedposts):
+    if selectedposts == 'checkedAll':
+        Post.objects.all().delete()
+    else:
+        selected = [int(x) for x in selectedposts.split(',')]
+        for postId in selected:
+            Post.objects.get(pk=postId).delete()
+    return redirect('post')
